@@ -31,6 +31,29 @@ llvm_prebuilt_library_static {
     },
 }
 
+cc_defaults {
+    name: "libclang_rt-prebuilt-default",
+    ramdisk_available: true,
+    apex_available: [
+        "//apex_available:anyapex",
+        "//apex_available:platform",
+    ],
+}
+
+cc_defaults {
+    name: "libclang_rt.builtins-android-default",
+    defaults: ["libclang_rt-prebuilt-default"],
+    sdk_version: "minimum",
+    enabled: false,
+    recovery_available: true,
+    vendor_available: true,
+    native_bridge_supported: true,
+    sanitize: {
+        never: true,
+    },
+    stl: "none",
+}
+
 libclang_rt_prebuilt_library_static {
     name: "libclang_rt.builtins-arm-android",
     sdk_version: "minimum",
@@ -51,6 +74,24 @@ libclang_rt_prebuilt_library_static {
     apex_available: [
         "//apex_available:anyapex",
         "//apex_available:platform",
+    ],
+}
+
+libclang_rt_prebuilt_library_static {
+    name: "libclang_rt.builtins-arm-android-exported",
+    defaults: ["libclang_rt.builtins-android-default"],
+    arch: {
+        arm: {
+            enabled: true,
+        },
+    },
+
+    // This exported variant of the builtins library is only intended for use in
+    // libc.so and libm.so, which exports some builtins symbols for backwards
+    // compatibility.
+    visibility: [
+        "//bionic:__subpackages__",
+        "//frameworks/libs/native_bridge_support/libc:__subpackages__",
     ],
 }
 
@@ -97,6 +138,23 @@ libclang_rt_prebuilt_library_static {
     apex_available: [
         "//apex_available:anyapex",
         "//apex_available:platform",
+    ],
+}
+
+libclang_rt_prebuilt_library_static {
+    name: "libclang_rt.builtins-i686-android-exported",
+    defaults: ["libclang_rt.builtins-android-default"],
+    arch: {
+        x86: {
+            enabled: true,
+        },
+    },
+
+    // This exported variant of the builtins library is only intended for use in
+    // libc.so, which exports some builtins symbols for backwards compatibility.
+    visibility: [
+        "//bionic:__subpackages__",
+        "//frameworks/libs/native_bridge_support/libc:__subpackages__",
     ],
 }
 
